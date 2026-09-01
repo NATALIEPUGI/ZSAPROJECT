@@ -1,0 +1,2261 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Stylish - Shoes Online Store</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Stylish - Fully Functional Shoes Online Store">
+  <meta name="author" content="Enhanced Template">
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Swiper -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,900;1,900&family=Source+Sans+Pro:wght@400;600;700;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #0a0a0a;
+      --accent: #e63946;
+      --accent-glow: rgba(230, 57, 70, 0.35);
+      --gray: #f5f5f5;
+      --dark-gray: #333;
+      --transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+      --shadow-soft: 0 10px 40px rgba(0,0,0,0.08);
+      --shadow-hover: 0 20px 50px rgba(0,0,0,0.15);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Inter', 'Source Sans Pro', sans-serif;
+      color: var(--primary);
+      overflow-x: hidden;
+      background: #fafafa;
+    }
+
+    /* Reveal animations */
+    .reveal {
+      opacity: 0;
+      transform: translateY(36px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+
+    @keyframes floatY {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 0 0 var(--accent-glow); }
+      50% { box-shadow: 0 0 0 10px transparent; }
+    }
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Preloader */
+    .preloader {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: #fff; display: flex; align-items: center; justify-content: center;
+      z-index: 9999; transition: opacity 0.5s, visibility 0.5s;
+    }
+    .preloader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+
+    /* Typography & Helpers */
+    .display-3, .display-4, .display-7 { font-family: 'Playfair Display', serif; }
+    .text-hover { transition: var(--transition); }
+    .text-hover:hover { color: var(--accent) !important; }
+    .light { color: #fff; }
+    .light-border { border-bottom: 2px solid #fff; padding-bottom: 2px; }
+    .fw-bold { font-weight: 700; }
+    .section-title {
+      font-size: 1.75rem; letter-spacing: 1px; position: relative; display: inline-block;
+    }
+    .section-title::after {
+      content: ''; display: block; width: 40px; height: 3px; background: var(--accent);
+      margin-top: 8px; border-radius: 2px; transition: width 0.4s ease;
+    }
+    .section-title:hover::after { width: 100%; }
+
+    /* Header */
+    .site-header {
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      position: sticky; top: 0; z-index: 1030;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+      transition: box-shadow 0.3s ease;
+    }
+    .site-header.scrolled { box-shadow: 0 8px 30px rgba(0,0,0,0.1); }
+    .header-top { font-size: 0.875rem; background: linear-gradient(90deg, #111 0%, #1a1a1a 100%); color: #fff; }
+    .header-top a { color: rgba(255,255,255,0.85) !important; }
+    .header-top a:hover { color: #fff !important; }
+    .header-top .social-links a { color: rgba(255,255,255,0.85); }
+    .header-top .social-links a:hover { color: var(--accent); }
+    .social-links a { color: var(--primary); transition: var(--transition); }
+    .social-links a:hover { color: var(--accent); transform: translateY(-2px); }
+    .navbar-brand img.logo { height: 40px; transition: var(--transition); }
+    .navbar-brand:hover img.logo { transform: scale(1.05); }
+    .nav-link { color: var(--primary) !important; font-weight: 600; position: relative; transition: var(--transition); }
+    .nav-link:hover, .nav-link.active { color: var(--accent) !important; }
+    .nav-link::after {
+      content: ''; position: absolute; bottom: 0; left: 50%; width: 0; height: 2px;
+      background: var(--accent); transition: var(--transition); transform: translateX(-50%);
+    }
+    .nav-link:hover::after, .nav-link.active::after { width: 60%; }
+    .user-items a { color: var(--primary); transition: var(--transition); position: relative; }
+    .user-items a:hover { color: var(--accent); transform: scale(1.15); }
+    .cart-count {
+      position: absolute; top: -10px; right: -12px; background: var(--accent); color: #fff;
+      font-size: 0.7rem; font-weight: 700; min-width: 20px; height: 20px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; opacity: 0; transform: scale(0);
+      transition: var(--transition); box-shadow: 0 2px 8px rgba(230,57,70,0.4); padding: 0 4px;
+    }
+    .cart-count.show { opacity: 1; transform: scale(1); }
+    .cart-count.bounce { animation: cartBounce 0.45s ease; }
+    @keyframes cartBounce {
+      0% { transform: scale(1); }
+      30% { transform: scale(1.4); }
+      50% { transform: scale(0.9); }
+      70% { transform: scale(1.15); }
+      100% { transform: scale(1); }
+    }
+
+    /* Search Box */
+    .search-box {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95);
+      z-index: 1050; display: none; align-items: center; justify-content: center;
+    }
+    .search-box.active { display: flex; }
+    .search-wrap { width: 90%; max-width: 700px; position: relative; }
+    .search-input {
+      width: 100%; background: transparent; border: none; border-bottom: 2px solid #fff;
+      color: #fff; font-size: 2rem; padding: 1rem 3rem 1rem 0; outline: none;
+    }
+    .search-input::placeholder { color: rgba(255,255,255,0.5); }
+    .search-wrap .search { position: absolute; right: 0; top: 50%; transform: translateY(-50%); fill: #fff; width: 28px; height: 28px; }
+    .close-button { position: absolute; top: -60px; right: 0; cursor: pointer; }
+    .close-button svg { width: 32px; height: 32px; transition: var(--transition); }
+    .close-button:hover svg { transform: rotate(90deg); }
+
+    /* Buttons */
+    .btn {
+      border-radius: 8px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase;
+      transition: var(--transition); position: relative; overflow: hidden; z-index: 1;
+    }
+    .btn::after {
+      content: ''; position: absolute; inset: 0; background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.25) 50%, transparent 70%);
+      background-size: 200% 100%; transform: translateX(-100%); transition: none; z-index: -1;
+    }
+    .btn:hover::after { animation: shimmer 0.7s ease; }
+    .btn-black, .btn-medium.btn-black {
+      background: var(--primary); color: #fff; border: 2px solid var(--primary); padding: 12px 28px;
+    }
+    .btn-black:hover, .btn-medium.btn-black:hover {
+      background: transparent; color: var(--primary); transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    }
+    .btn-red {
+      background: var(--accent); color: #fff; border: 2px solid var(--accent); padding: 12px 28px;
+    }
+    .btn-red:hover {
+      background: #c1121f; border-color: #c1121f; color: #fff;
+      transform: translateY(-2px); box-shadow: 0 8px 24px var(--accent-glow);
+    }
+    .btn-outline-gray {
+      background: transparent; color: var(--dark-gray); border: 2px solid #ccc; padding: 12px 28px;
+    }
+    .btn-outline-gray:hover { border-color: var(--primary); color: var(--primary); transform: translateY(-2px); }
+    .btn-light {
+      background: #fff; border: none; width: 46px; height: 46px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; transition: var(--transition);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+    }
+    .btn-light:hover {
+      background: var(--accent); color: #fff; transform: translateY(-4px) scale(1.05);
+      box-shadow: 0 10px 25px var(--accent-glow);
+    }
+    .btn-light:hover svg { fill: #fff; }
+
+    /* Hero / Intro Swiper */
+    #intro { margin-top: 0; }
+    .main-swiper { overflow: hidden; border-radius: 20px; }
+    .swiper-slide .card {
+      border: none; border-radius: 20px; overflow: hidden; position: relative;
+      height: 480px; transition: var(--transition); box-shadow: var(--shadow-soft);
+    }
+    .swiper-slide .card.large { height: 520px; }
+    .swiper-slide .card img {
+      width: 100%; height: 100%; object-fit: cover; transition: transform 1s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+    .swiper-slide .card:hover img { transform: scale(1.08); }
+    .cart-concern {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      background: linear-gradient(transparent, rgba(0,0,0,0.8));
+      color: #fff; z-index: 2;
+    }
+    .card-title { text-shadow: 0 2px 12px rgba(0,0,0,0.4); }
+    .swiper-pagination-bullet {
+      background: #fff; opacity: 0.5; width: 10px; height: 10px;
+      transition: all 0.3s ease;
+    }
+    .swiper-pagination-bullet-active {
+      opacity: 1; background: var(--accent); width: 28px; border-radius: 6px;
+    }
+
+    /* Discount Coupon */
+    .discount-coupon .coupon {
+      background: linear-gradient(135deg, #fff 0%, #f8f8f8 100%);
+      border-radius: 20px; overflow: hidden; transition: var(--transition);
+      border: 1px solid rgba(0,0,0,0.04); box-shadow: var(--shadow-soft);
+    }
+    .discount-coupon .coupon:hover {
+      box-shadow: var(--shadow-hover); transform: translateY(-6px);
+    }
+    .bold-text {
+      font-size: 6rem; font-weight: 900; color: rgba(230,57,70,0.08); line-height: 1;
+      top: 50%; left: 20px; transform: translateY(-50%); pointer-events: none;
+    }
+
+    /* Product Cards */
+    .product-card {
+      transition: var(--transition); border-radius: 16px; overflow: hidden;
+      background: #fff; padding: 8px; box-shadow: var(--shadow-soft);
+    }
+    .product-card:hover {
+      transform: translateY(-12px);
+      box-shadow: var(--shadow-hover);
+    }
+    .product-card .card-img {
+      position: relative; overflow: hidden; border-radius: 12px; background: var(--gray);
+      aspect-ratio: 1 / 1;
+    }
+    .product-card .product-image {
+      width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+    .product-card:hover .product-image { transform: scale(1.12); }
+    .cart-concern.position-absolute {
+      bottom: -70px; left: 0; right: 0; transition: var(--transition);
+      background: linear-gradient(transparent, rgba(0,0,0,0.55));
+      padding: 24px 0 18px;
+    }
+    .product-card:hover .cart-concern.position-absolute { bottom: 0; }
+    .card-detail { padding: 10px 6px 6px; }
+    .card-title a { color: var(--primary); text-decoration: none; transition: var(--transition); }
+    .card-title a:hover { color: var(--accent); }
+    .card-price { color: var(--accent); font-size: 1.15rem; font-weight: 700; }
+
+    /* Collection Cards */
+    .collection-card {
+      border-radius: 20px; overflow: hidden; height: 420px; position: relative;
+      transition: var(--transition); box-shadow: var(--shadow-soft);
+    }
+    .collection-card:hover { transform: translateY(-8px) scale(1.01); box-shadow: var(--shadow-hover); }
+    .collection-card img {
+      width: 100%; height: 100%; object-fit: cover; transition: transform 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+    .collection-card:hover img { transform: scale(1.1); }
+    .collection-card .card-detail {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      background: linear-gradient(transparent, rgba(0,0,0,0.75));
+      color: #fff;
+    }
+    .collection-card .card-title a { color: #fff; text-decoration: none; }
+
+    /* Modals */
+    .modal-content {
+      border: none; border-radius: 20px; overflow: hidden;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.2); animation: fadeSlideIn 0.35s ease;
+    }
+    .modal-header { border-bottom: 1px solid #eee; }
+    .modal-body { padding: 1.5rem; }
+    .modal.fade .modal-dialog { transition: transform 0.35s cubic-bezier(0.25, 0.8, 0.25, 1); }
+    .mini-cart-item {
+      transition: var(--transition); border-radius: 8px; padding: 10px;
+    }
+    .mini-cart-item:hover { background: var(--gray); }
+    .mini-cart-item img {
+      width: 70px; height: 70px; object-fit: cover; border-radius: 8px;
+    }
+    .quantity .btn { width: 36px; height: 36px; padding: 0; display: flex; align-items: center; justify-content: center; }
+    .quantity input { width: 50px; text-align: center; border: 1px solid #ddd; border-left: 0; border-right: 0; }
+    .remove svg { width: 18px; height: 18px; transition: var(--transition); }
+    .remove:hover svg { fill: var(--accent); transform: scale(1.2); }
+
+    /* Quick View Modal */
+    #modaltoggle .image-holder img {
+      width: 100%; border-radius: 12px; max-height: 350px; object-fit: cover;
+    }
+    .product-price { color: var(--accent); font-weight: 700; }
+    .qty-number {
+      width: 40px; height: 40px; border: 1px solid #ddd; cursor: pointer;
+      transition: var(--transition); user-select: none;
+    }
+    .qty-number:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .qty-number:hover svg { fill: #fff; }
+    #quantity_001 { width: 50px; border: 1px solid #ddd; border-left: 0; border-right: 0; height: 40px; }
+
+    /* Footer */
+    #footer { background: #fafafa; }
+    .widget-title { font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; }
+    .menu-list a { color: #666; text-decoration: none; transition: var(--transition); font-size: 0.9rem; }
+    .menu-list a:hover { color: var(--accent); padding-left: 6px; }
+    .footer-contact-text span { display: block; margin-bottom: 8px; color: #666; font-size: 0.9rem; }
+
+    /* Toast Notification */
+    .toast-container {
+      position: fixed; bottom: 30px; right: 30px; z-index: 1100;
+    }
+    .custom-toast {
+      background: linear-gradient(135deg, #111 0%, #2a2a2a 100%); color: #fff;
+      padding: 16px 24px; border-radius: 14px; border-left: 4px solid var(--accent);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.25); display: flex; align-items: center; gap: 12px;
+      transform: translateY(100px) scale(0.95); opacity: 0; transition: var(--transition); min-width: 280px;
+    }
+    .custom-toast.show { transform: translateY(0) scale(1); opacity: 1; }
+    .custom-toast .toast-icon { font-size: 1.4rem; color: var(--accent); }
+
+    /* Empty Cart */
+    .empty-cart { text-align: center; padding: 40px 20px; color: #999; }
+    .empty-cart svg { width: 64px; height: 64px; margin-bottom: 16px; opacity: 0.4; }
+
+    /* E-wallet selection */
+    .wallet-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .wallet-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 18px 12px;
+      border: 2px solid #e5e5e5;
+      border-radius: 14px;
+      background: #fff;
+      cursor: pointer;
+      transition: var(--transition);
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--primary);
+    }
+    .wallet-btn:hover, .wallet-btn.selected {
+      border-color: var(--accent);
+      background: rgba(230, 57, 70, 0.04);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(230, 57, 70, 0.12);
+    }
+    .wallet-btn .wallet-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #fff;
+    }
+    .wallet-btn .wallet-icon.gcash { background: linear-gradient(135deg, #007dff, #0052cc); }
+    .wallet-btn .wallet-icon.maya { background: linear-gradient(135deg, #00d4aa, #00a88a); }
+    .wallet-btn .wallet-icon.paypal { background: linear-gradient(135deg, #003087, #009cde); }
+    .wallet-btn .wallet-icon.grab { background: linear-gradient(135deg, #00b14f, #00a043); }
+    .wallet-btn .wallet-icon.bank { background: linear-gradient(135deg, #333, #555); }
+    .wallet-btn .wallet-icon.card { background: linear-gradient(135deg, #6c5ce7, #a29bfe); }
+
+    /* Payment detection status */
+    .payment-status {
+      background: #f8f9fa;
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 16px;
+    }
+    .payment-status .status-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.9rem;
+    }
+    .payment-status .pulse-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #f0ad4e;
+      animation: pulseGlow 1.4s ease infinite;
+    }
+    .payment-status.detected .pulse-dot {
+      background: #28a745;
+      animation: none;
+    }
+    .payment-status.detected {
+      background: #e8f5e9;
+    }
+    .payment-status.error {
+      background: #fdecea;
+    }
+    .payment-status.error .pulse-dot {
+      background: #dc3545;
+      animation: none;
+    }
+    .payment-status.expired {
+      background: #fff3cd;
+    }
+    .payment-status.expired .pulse-dot {
+      background: #ffc107;
+      animation: none;
+    }
+
+    /* Cart action buttons */
+    .cart-item-actions .btn {
+      font-size: 0.75rem; padding: 4px 10px; text-transform: none; letter-spacing: 0;
+      border-radius: 4px; font-weight: 600;
+    }
+    .cart-item-actions .btn svg { vertical-align: -2px; }
+    .edit-qty-row { display: flex; align-items: center; }
+
+    /* Smooth scroll */
+    html { scroll-behavior: smooth; }
+
+    /* Product card add animation feedback */
+    .product-card.added .card-img::after {
+      content: '✓ Added';
+      position: absolute; inset: 0; background: rgba(17,17,17,0.75);
+      color: #fff; display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 1.1rem; letter-spacing: 1px;
+      animation: fadeInOut 1.2s ease forwards;
+    }
+    @keyframes fadeInOut {
+      0% { opacity: 0; }
+      20% { opacity: 1; }
+      80% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+
+    /* Responsive */
+    @media (max-width: 991px) {
+      .swiper-slide .card, .swiper-slide .card.large { height: 360px; }
+      .bold-text { font-size: 4rem; }
+    }
+    @media (max-width: 576px) {
+      .swiper-slide .card, .swiper-slide .card.large { height: 280px; }
+      .search-input { font-size: 1.4rem; }
+    }
+
+    /* SVG Icons */
+    svg { fill: currentColor; }
+  </style>
+</head>
+
+<body>
+  <!-- SVG Symbols -->
+  <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <symbol id="shopping-carriage" viewBox="0 0 24 24" fill="none">
+      <path d="M5 22H19C20.103 22 21 21.103 21 20V9C21 8.73478 20.8946 8.48043 20.7071 8.29289C20.5196 8.10536 20.2652 8 20 8H17V7C17 4.243 14.757 2 12 2C9.243 2 7 4.243 7 7V8H4C3.73478 8 3.48043 8.10536 3.29289 8.29289C3.10536 8.48043 3 8.73478 3 9V20C3 21.103 3.897 22 5 22ZM9 7C9 5.346 10.346 4 12 4C13.654 4 15 5.346 15 7V8H9V7ZM5 10H7V12H9V10H15V12H17V10H19L19.002 20H5V10Z" fill="currentColor"/>
+    </symbol>
+    <symbol id="quick-view" viewBox="0 0 24 24">
+      <path fill="currentColor" d="M10 18a7.952 7.952 0 0 0 4.897-1.688l4.396 4.396l1.414-1.414l-4.396-4.396A7.952 7.952 0 0 0 18 10c0-4.411-3.589-8-8-8s-8 3.589-8 8s3.589 8 8 8zm0-14c3.309 0 6 2.691 6 6s-2.691 6-6 6s-6-2.691-6-6s2.691-6 6-6z"/>
+    </symbol>
+    <symbol id="shopping-cart" viewBox="0 0 24 24" fill="none">
+      <path d="M21 4H2V6H4.3L7.582 15.025C7.79362 15.6029 8.1773 16.1021 8.68134 16.4552C9.18539 16.8083 9.78556 16.9985 10.401 17H19V15H10.401C9.982 15 9.604 14.735 9.461 14.342L8.973 13H18.246C19.136 13 19.926 12.402 20.169 11.549L21.962 5.275C22.0039 5.12615 22.0109 4.96962 21.9823 4.81763C21.9537 4.66565 21.8904 4.52234 21.7973 4.39889C21.7041 4.27544 21.5837 4.1752 21.4454 4.106C21.3071 4.0368 21.1546 4.00053 21 4ZM18.246 11H8.246L6.428 6H19.675L18.246 11Z" fill="currentColor"/>
+      <path d="M10.5 21C11.3284 21 12 20.3284 12 19.5C12 18.6716 11.3284 18 10.5 18C9.67157 18 9 18.6716 9 19.5C9 20.3284 9.67157 21 10.5 21Z" fill="currentColor"/>
+      <path d="M16.5 21C17.3284 21 18 20.3284 18 19.5C18 18.6716 17.3284 18 16.5 18C15.6716 18 15 18.6716 15 19.5C15 20.3284 15.6716 21 16.5 21Z" fill="currentColor"/>
+    </symbol>
+    <symbol id="close" viewBox="0 0 16 16">
+      <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/>
+    </symbol>
+    <symbol id="navbar-icon" viewBox="0 0 16 16">
+      <path d="M14 10.5a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 .5-.5zm0-3a.5.5 0 0 0-.5-.5h-7a.5.5 0 0 0 0 1h7a.5.5 0 0 0 .5-.5zm0-3a.5.5 0 0 0-.5-.5h-11a.5.5 0 0 0 0 1h11a.5.5 0 0 0 .5-.5z"/>
+    </symbol>
+    <symbol id="plus" viewBox="0 0 24 24">
+      <path fill="currentColor" d="M19 12.998h-6v6h-2v-6H5v-2h6v-6h2v6h6z"/>
+    </symbol>
+    <symbol id="minus" viewBox="0 0 24 24">
+      <path fill="currentColor" d="M19 12.998H5v-2h14z"/>
+    </symbol>
+    <symbol id="user" viewBox="0 0 24 24">
+      <path fill="currentColor" d="M12 2a5 5 0 1 0 5 5a5 5 0 0 0-5-5zm0 8a3 3 0 1 1 3-3a3 3 0 0 1-3 3zm9 11v-1a7 7 0 0 0-7-7h-4a7 7 0 0 0-7 7v1h2v-1a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v1z"/>
+    </symbol>
+    <symbol id="search" viewBox="0 0 24 24">
+      <path fill="currentColor" d="M10 18a7.952 7.952 0 0 0 4.897-1.688l4.396 4.396l1.414-1.414l-4.396-4.396A7.952 7.952 0 0 0 18 10c0-4.411-3.589-8-8-8s-8 3.589-8 8s3.589 8 8 8zm0-14c3.309 0 6 2.691 6 6s-2.691 6-6 6s-6-2.691-6-6s2.691-6 6-6z"/>
+    </symbol>
+    <symbol id="facebook" viewBox="0 0 24 24">
+      <path fill="currentColor" d="M9.198 21.5h4v-8.01h3.604l.396-3.98h-4V7.5a1 1 0 0 1 1-1h3v-4h-3a5 5 0 0 0-5 5v2.01h-2l-.396 3.98h2.396v8.01Z"/>
+    </symbol>
+    <symbol id="instagram" viewBox="0 0 256 256">
+      <path fill="currentColor" d="M128 80a48 48 0 1 0 48 48a48.05 48.05 0 0 0-48-48Zm0 80a32 32 0 1 1 32-32a32 32 0 0 1-32 32Zm48-136H80a56.06 56.06 0 0 0-56 56v96a56.06 56.06 0 0 0 56 56h96a56.06 56.06 0 0 0 56-56V80a56.06 56.06 0 0 0-56-56Zm40 152a40 40 0 0 1-40 40H80a40 40 0 0 1-40-40V80a40 40 0 0 1 40-40h96a40 40 0 0 1 40 40ZM192 76a12 12 0 1 1-12-12a12 12 0 0 1 12 12Z"/>
+    </symbol>
+    <symbol id="youtube" viewBox="0 0 32 32">
+      <path fill="currentColor" d="M29.41 9.26a3.5 3.5 0 0 0-2.47-2.47C24.76 6.2 16 6.2 16 6.2s-8.76 0-10.94.59a3.5 3.5 0 0 0-2.47 2.47A36.13 36.13 0 0 0 2 16a36.13 36.13 0 0 0 .59 6.74a3.5 3.5 0 0 0 2.47 2.47c2.18.59 10.94.59 10.94.59s8.76 0 10.94-.59a3.5 3.5 0 0 0 2.47-2.47A36.13 36.13 0 0 0 30 16a36.13 36.13 0 0 0-.59-6.74ZM13.2 20.2v-8.4l7.27 4.2Z"/>
+    </symbol>
+    <symbol id="pinterest" viewBox="0 0 24 24">
+      <path fill="currentColor" d="M9.04 21.54c.96.29 1.93.46 2.96.46a10 10 0 0 0 10-10A10 10 0 0 0 12 2A10 10 0 0 0 2 12c0 4.25 2.67 7.9 6.44 9.34c-.09-.78-.18-2.07 0-2.96l1.15-4.94s-.29-.58-.29-1.5c0-1.38.86-2.41 1.84-2.41c.86 0 1.26.63 1.26 1.44c0 .86-.57 2.09-.86 3.27c-.17.98.52 1.84 1.52 1.84c1.78 0 3.16-1.9 3.16-4.58c0-2.4-1.72-4.04-4.19-4.04c-2.82 0-4.48 2.1-4.48 4.31c0 .86.28 1.73.74 2.3c.09.06.09.14.06.29l-.29 1.09c0 .17-.11.23-.28.11c-1.28-.56-2.02-2.38-2.02-3.85c0-3.16 2.24-6.03 6.56-6.03c3.44 0 6.12 2.47 6.12 5.75c0 3.44-2.13 6.2-5.18 6.2c-.97 0-1.92-.52-2.26-1.13l-.67 2.37c-.23.86-.86 2.01-1.29 2.7v-.03Z"/>
+    </symbol>
+  </svg>
+
+  <!-- Preloader -->
+  <div class="preloader" id="preloader">
+    <svg width="100" height="100" viewBox="0 0 50 100">
+      <circle fill="#111" cx="6" cy="50" r="6">
+        <animate attributeName="opacity" dur="1s" values="0;1;0" repeatCount="indefinite" begin="0.1"/>
+      </circle>
+      <circle fill="#111" cx="26" cy="50" r="6">
+        <animate attributeName="opacity" dur="1s" values="0;1;0" repeatCount="indefinite" begin="0.2"/>
+      </circle>
+      <circle fill="#111" cx="46" cy="50" r="6">
+        <animate attributeName="opacity" dur="1s" values="0;1;0" repeatCount="indefinite" begin="0.3"/>
+      </circle>
+    </svg>
+  </div>
+
+  <!-- Search Overlay -->
+  <div class="search-box" id="searchBox">
+    <div class="search-wrap">
+      <div class="close-button" id="closeSearch">
+        <svg class="close" style="fill: white;"><use xlink:href="#close"></use></svg>
+      </div>
+      <form id="search-form" class="text-center pt-3" onsubmit="return handleSearch(event)">
+        <input type="text" class="search-input" id="searchInput" placeholder="Search shoes..." autocomplete="off">
+        <svg class="search"><use xlink:href="#search"></use></svg>
+      </form>
+    </div>
+  </div>
+
+  <!-- Quick View Modal -->
+  <div class="modal fade" id="modaltoggle" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-body p-4">
+          <div class="row g-4">
+            <div class="col-md-6">
+              <div class="image-holder">
+                <img id="qv-image" src="" alt="Product" class="img-fluid rounded">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="summary">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                  <h3 class="display-7 mb-0" id="qv-title">Product Name</h3>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <span class="product-price fs-3" id="qv-price">₱0</span>
+                <p class="fs-6 mt-3 text-muted" id="qv-desc">Product description goes here.</p>
+                <ul class="list-unstyled mt-3" id="qv-details">
+                  <li><strong>Colour:</strong> <span id="qv-color">—</span></li>
+                  <li><strong>Style:</strong> <span id="qv-style">—</span></li>
+                </ul>
+                <div class="d-flex align-items-center gap-3 mt-4">
+                  <div class="quantity d-flex">
+                    <div class="qty-number d-flex justify-content-center align-items-center" id="qv-minus">
+                      <svg width="18" height="18"><use xlink:href="#minus"></use></svg>
+                    </div>
+                    <input type="number" id="qv-qty" class="text-center" value="1" min="1" style="width:50px;border:1px solid #ddd;border-left:0;border-right:0;height:40px;">
+                    <div class="qty-number d-flex justify-content-center align-items-center" id="qv-plus">
+                      <svg width="18" height="18"><use xlink:href="#plus"></use></svg>
+                    </div>
+                  </div>
+                  <button type="button" class="btn btn-black btn-medium flex-grow-1" id="qv-add-to-cart">Add to Cart</button>
+                </div>
+                <div class="mt-3">
+                  <strong>Categories:</strong>
+                  <span class="text-muted" id="qv-category">Shoes</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cart Modal -->
+  <div class="modal fade" id="modallong" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title fs-5">Your Cart (<span id="cart-item-count">0</span>)</h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="shopping-cart">
+            <div id="cart-items-container">
+              <!-- Cart items rendered by JS -->
+            </div>
+            <div class="mini-cart-total d-flex justify-content-between py-4 border-top mt-3 d-none" id="cart-total-section">
+              <span class="fs-5 fw-bold">Subtotal:</span>
+              <span class="fs-5 fw-bold text-danger" id="cart-subtotal">$0.00</span>
+            </div>
+            <div class="modal-footer border-0 justify-content-center gap-2 d-none" id="cart-actions">
+              <button type="button" class="btn btn-outline-gray" data-bs-dismiss="modal">Continue Shopping</button>
+              <button type="button" class="btn btn-red" id="checkout-btn">Checkout</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Login Modal -->
+  <div class="modal fade" id="modallogin" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered">
+      <div class="modal-content p-4">
+        <div class="modal-header border-0 mx-auto">
+          <h2 class="modal-title fs-3 fw-normal">Login</h2>
+        </div>
+        <div class="modal-body">
+          <form id="login-form" onsubmit="return handleLogin(event)">
+            <div class="mb-3">
+              <input type="email" name="email" id="login-email" placeholder="Email Address *" class="form-control" required>
+              <div class="invalid-feedback">Please enter a valid email.</div>
+            </div>
+            <div class="mb-3">
+              <input type="password" name="password" id="login-password" placeholder="Password *" class="form-control" required>
+              <div class="invalid-feedback">Password is required.</div>
+            </div>
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <label class="form-check-label">
+                <input type="checkbox" class="form-check-input me-1" id="login-remember"> Remember me
+              </label>
+              <a href="#" class="text-decoration-none small">Forgot password?</a>
+            </div>
+            <div class="d-grid gap-2">
+              <button type="submit" class="btn btn-red">Login</button>
+              <button type="button" class="btn btn-outline-gray" data-bs-dismiss="modal">Cancel</button>
+            </div>
+            <p class="text-center mt-3 mb-0 small">Don't have an account? <a href="#" class="text-danger fw-semibold" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#modalsignup">Sign Up</a></p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sign Up Modal -->
+  <div class="modal fade" id="modalsignup" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered">
+      <div class="modal-content p-4">
+        <div class="modal-header border-0 mx-auto">
+          <h2 class="modal-title fs-3 fw-normal">Create Account</h2>
+        </div>
+        <div class="modal-body">
+          <form id="signup-form" onsubmit="return handleSignup(event)">
+            <div class="mb-3">
+              <input type="text" name="fullname" id="signup-name" placeholder="Full Name *" class="form-control" required minlength="2">
+              <div class="invalid-feedback">Please enter your full name (at least 2 characters).</div>
+            </div>
+            <div class="mb-3">
+              <input type="email" name="email" id="signup-email" placeholder="Email Address *" class="form-control" required>
+              <div class="invalid-feedback">Please enter a valid email address.</div>
+            </div>
+            <div class="mb-3">
+              <input type="tel" name="mobile" id="signup-mobile" placeholder="Mobile Number (09XXXXXXXXX) *" class="form-control" maxlength="11" required>
+              <div class="invalid-feedback">Please enter a valid 11-digit PH mobile number.</div>
+            </div>
+            <div class="mb-3">
+              <input type="password" name="password" id="signup-password" placeholder="Password * (min. 6 characters)" class="form-control" required minlength="6">
+              <div class="invalid-feedback">Password must be at least 6 characters.</div>
+            </div>
+            <div class="mb-3">
+              <input type="password" name="confirm" id="signup-confirm" placeholder="Confirm Password *" class="form-control" required>
+              <div class="invalid-feedback">Passwords do not match.</div>
+            </div>
+            <div class="mb-3 form-check">
+              <input type="checkbox" class="form-check-input" id="signup-terms" required>
+              <label class="form-check-label small" for="signup-terms">I agree to the Terms & Privacy Policy</label>
+              <div class="invalid-feedback">You must agree to continue.</div>
+            </div>
+            <div class="d-grid gap-2">
+              <button type="submit" class="btn btn-red">Create Account</button>
+              <button type="button" class="btn btn-outline-gray" data-bs-dismiss="modal">Cancel</button>
+            </div>
+            <p class="text-center mt-3 mb-0 small">Already have an account? <a href="#" class="text-danger fw-semibold" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#modallogin">Login</a></p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Payment / QR Modal -->
+  <div class="modal fade" id="modalPayment" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-md modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header border-0">
+          <h2 class="modal-title fs-5" id="payment-modal-title">Checkout & Pay</h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body px-4 pb-4">
+          <!-- Step 1: Customer details -->
+          <div id="payment-step-details">
+            <p class="text-muted small mb-3">Please enter your details to continue.</p>
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Full Name <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="pay-name" placeholder="Juan Dela Cruz" autocomplete="name">
+              <div class="invalid-feedback" id="pay-name-error">Please enter your full name (at least 2 characters).</div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Email Address <span class="text-danger">*</span></label>
+              <input type="email" class="form-control" id="pay-email" placeholder="juan@email.com" autocomplete="email">
+              <div class="invalid-feedback" id="pay-email-error">Please enter a valid email address.</div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Mobile Number <span class="text-danger">*</span></label>
+              <input type="tel" class="form-control" id="pay-mobile" placeholder="09XXXXXXXXX" maxlength="11">
+              <div class="invalid-feedback" id="pay-mobile-error">Please enter a valid 11-digit PH mobile number (09XXXXXXXXX).</div>
+            </div>
+            <div class="bg-light rounded p-3 mb-3 d-flex justify-content-between align-items-center">
+              <span class="text-muted">Order Total</span>
+              <span class="fs-5 fw-bold text-danger" id="pay-amount-preview">₱0</span>
+            </div>
+            <div class="d-grid gap-2">
+              <button type="button" class="btn btn-red" id="proceed-to-wallet-btn">Proceed to Payment</button>
+              <button type="button" class="btn btn-outline-gray" data-bs-dismiss="modal">Cancel</button>
+            </div>
+          </div>
+
+          <!-- Step 2: E-wallet selection -->
+          <div id="payment-step-wallet" class="d-none">
+            <p class="text-muted small mb-3">Select your preferred payment method. A QR code will be generated for you to scan.</p>
+            <div class="bg-light rounded p-3 mb-3 d-flex justify-content-between align-items-center">
+              <span class="text-muted">Order Total</span>
+              <span class="fs-5 fw-bold text-danger" id="pay-amount-wallet">₱0</span>
+            </div>
+            <div class="wallet-grid mb-3" id="wallet-grid">
+              <button type="button" class="wallet-btn" data-wallet="GCash" data-code="gcash">
+                <span class="wallet-icon gcash">G</span>
+                GCash
+              </button>
+              <button type="button" class="wallet-btn" data-wallet="Maya" data-code="maya">
+                <span class="wallet-icon maya">M</span>
+                Maya
+              </button>
+              <button type="button" class="wallet-btn" data-wallet="PayPal" data-code="paypal">
+                <span class="wallet-icon paypal">P</span>
+                PayPal
+              </button>
+              <button type="button" class="wallet-btn" data-wallet="GrabPay" data-code="grab">
+                <span class="wallet-icon grab">G</span>
+                GrabPay
+              </button>
+              <button type="button" class="wallet-btn" data-wallet="Bank Transfer" data-code="bank">
+                <span class="wallet-icon bank">B</span>
+                Bank QR
+              </button>
+              <button type="button" class="wallet-btn" data-wallet="Card / Other" data-code="card">
+                <span class="wallet-icon card">C</span>
+                Card / Other
+              </button>
+            </div>
+            <div class="d-grid gap-2">
+              <button type="button" class="btn btn-outline-gray" id="back-to-details-btn">Back</button>
+            </div>
+          </div>
+
+          <!-- Step 3: QR Code + automatic detection -->
+          <div id="payment-step-qr" class="text-center d-none">
+            <p class="text-muted mb-1">Order <strong id="pay-order-id">#STY-0000</strong></p>
+            <p class="small text-muted mb-2">Paying as <strong id="pay-customer-name">—</strong> via <strong id="pay-method-name">—</strong></p>
+            <div class="qr-wrapper mx-auto mb-3" style="width:220px;height:220px;background:#f8f8f8;border-radius:12px;display:flex;align-items:center;justify-content:center;border:1px solid #eee;">
+              <img id="qr-code-img" src="" alt="Payment QR Code" style="max-width:200px;max-height:200px;display:none;">
+              <div id="qr-loading" class="spinner-border text-secondary" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </div>
+            <div class="mb-2">
+              <span class="fs-4 fw-bold text-danger" id="pay-amount">₱0</span>
+            </div>
+            <p class="small text-muted mb-3" id="qr-instruction">Scan this QR code with your e-wallet app to complete payment.</p>
+
+            <div class="payment-status" id="payment-status">
+              <div class="status-row">
+                <span class="pulse-dot"></span>
+                <span id="payment-status-text">Waiting for payment… Scan the QR to pay.</span>
+              </div>
+            </div>
+
+            <div class="d-grid gap-2">
+              <button type="button" class="btn btn-outline-gray" id="back-to-wallet-btn">Change Payment Method</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Success / Payment Verification Modal -->
+  <div class="modal fade" id="modalSuccess" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-md modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-body text-center p-5">
+          <div class="success-icon mb-3" style="width:80px;height:80px;background:#e8f5e9;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#2e7d32" stroke-width="2.5">
+              <path d="M20 6L9 17l-5-5"/>
+            </svg>
+          </div>
+          <h2 class="fs-3 mb-2">Payment Successful!</h2>
+          <p class="text-muted mb-1">Thank you for your purchase.</p>
+          <p class="mb-3">Order <strong id="success-order-id">#STY-0000</strong> has been confirmed.</p>
+          <div class="bg-light rounded p-3 mb-4 text-start small">
+            <div class="d-flex justify-content-between mb-1">
+              <span class="text-muted">Amount Paid</span>
+              <span class="fw-bold" id="success-amount">₱0</span>
+            </div>
+            <div class="d-flex justify-content-between mb-1">
+              <span class="text-muted">Payment Method</span>
+              <span id="success-method">QR Code</span>
+            </div>
+            <div class="d-flex justify-content-between">
+              <span class="text-muted">Status</span>
+              <span class="text-success fw-bold">Verified ✓</span>
+            </div>
+          </div>
+          <div class="d-grid gap-2">
+            <button type="button" class="btn btn-black" id="success-done-btn">Continue Shopping</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast-container">
+    <div class="custom-toast" id="toast">
+      <span class="toast-icon">✓</span>
+      <span id="toast-message">Item added to cart!</span>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header id="header" class="site-header text-black">
+    <div class="header-top border-bottom py-2">
+      <div class="container-lg">
+        <div class="row align-items-center">
+          <div class="col-4">
+            <ul class="social-links list-unstyled d-flex m-0 gap-2">
+              <li><a href="#"><svg width="18" height="18"><use xlink:href="#facebook"></use></svg></a></li>
+              <li><a href="#"><svg width="18" height="18"><use xlink:href="#instagram"></use></svg></a></li>
+              <li><a href="#"><svg width="18" height="18"><use xlink:href="#youtube"></use></svg></a></li>
+              <li><a href="#"><svg width="18" height="18"><use xlink:href="#pinterest"></use></svg></a></li>
+            </ul>
+          </div>
+          <div class="col-4 d-none d-md-block text-center">
+            <p class="m-0"><strong>Special Offer</strong>: Free Shipping on all orders!</p>
+          </div>
+          <div class="col-4">
+            <ul class="d-flex justify-content-end gap-3 list-unstyled m-0 small">
+              <li><a href="#" class="text-decoration-none">Contact</a></li>
+              <li><a href="#" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#modallong">Cart</a></li>
+              <li><a href="login.html" class="text-decoration-none auth-login-link">Login</a></li>
+              <li><a href="signup.html" class="text-decoration-none auth-signup-link">Sign Up</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <nav class="navbar navbar-expand-lg py-3">
+      <div class="container-lg">
+        <a class="navbar-brand" href="#">
+          <span class="fs-3 fw-bold" style="font-family:'Playfair Display',serif;">Natalie's Random Shoes</span>
+        </a>
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#bdNavbar">
+          <svg width="28" height="28"><use xlink:href="#navbar-icon"></use></svg>
+        </button>
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="bdNavbar">
+          <div class="offcanvas-header">
+            <a class="navbar-brand" href="#"><span class="fs-4 fw-bold">Stylish</span></a>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+          </div>
+          <div class="offcanvas-body">
+            <ul class="navbar-nav fw-bold justify-content-end align-items-center flex-grow-1 gap-1">
+              <li class="nav-item"><a class="nav-link active px-3" href="#">Home</a></li>
+              <li class="nav-item"><a class="nav-link px-3" href="#featured-products">Men</a></li>
+              <li class="nav-item"><a class="nav-link px-3" href="#latest-products">Women</a></li>
+              <li class="nav-item"><a class="nav-link px-3" href="#collection-products">Collections</a></li>
+              <li class="nav-item"><a class="nav-link px-3" href="#">Sale</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="user-items ms-auto ms-lg-4">
+          <ul class="d-flex list-unstyled align-items-center m-0 gap-3">
+            <li>
+              <a href="login.html" class="border-0 auth-user-icon">
+                <svg width="24" height="24"><use xlink:href="#user"></use></svg>
+              </a>
+            </li>
+            <li>
+              <a href="#" data-bs-toggle="modal" data-bs-target="#modallong" class="border-0 position-relative" id="cart-icon-btn">
+                <svg width="24" height="24"><use xlink:href="#shopping-cart"></use></svg>
+                <span class="cart-count" id="cart-badge">0</span>
+              </a>
+            </li>
+            <li>
+              <a href="#" class="border-0" id="openSearch">
+                <svg width="24" height="24"><use xlink:href="#search"></use></svg>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Hero Swiper -->
+  <section id="intro" class="position-relative mt-3 mb-5">
+    <div class="container-lg">
+      <div class="swiper main-swiper">
+        <div class="swiper-wrapper">
+          <div class="swiper-slide">
+            <div class="card large">
+              <img src="https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=1200&q=80" alt="Women Shoes">
+              <div class="cart-concern p-4 p-lg-5">
+                <h2 class="card-title display-3 light">Stylish Shoes for Women</h2>
+                <a href="#featured-products" class="text-uppercase light mt-3 d-inline-block text-hover fw-bold light-border">Shop Now</a>
+              </div>
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div class="row g-3">
+              <div class="col-12">
+                <div class="card">
+                  <img src="https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=800&q=80" alt="Sports">
+                  <div class="cart-concern p-4">
+                    <h2 class="card-title display-4 light">Sports Wear</h2>
+                    <a href="#featured-products" class="text-uppercase light mt-2 d-inline-block text-hover fw-bold light-border">Shop Now</a>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="card">
+                  <img src="https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=800&q=80" alt="Fashion">
+                  <div class="cart-concern p-4">
+                    <h2 class="card-title display-4 light">Fashion Sneakers</h2>
+                    <a href="#latest-products" class="text-uppercase light mt-2 d-inline-block text-hover fw-bold light-border">Shop Now</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div class="card large">
+              <img src="https://images.unsplash.com/photo-1460353581641-37baddab0fa2?w=1200&q=80" alt="Men Shoes">
+              <div class="cart-concern p-4 p-lg-5">
+                <h2 class="card-title display-3 light">Stylish Shoes for Men</h2>
+                <a href="#featured-products" class="text-uppercase light mt-3 d-inline-block text-hover fw-bold light-border">Shop Now</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="swiper-pagination mt-3"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Discount Coupon -->
+  <section class="discount-coupon py-4 my-4 reveal">
+    <div class="container">
+      <div class="bg-light coupon position-relative p-4 p-md-5 rounded-3">
+        <div class="bold-text position-absolute d-none d-md-block">10% OFF</div>
+        <div class="row justify-content-between align-items-center">
+          <div class="col-lg-7 mb-3 mb-lg-0">
+            <h2 class="display-7 mb-1">10% OFF Discount Coupons</h2>
+            <p class="m-0 text-muted">Subscribe to get 10% OFF on all purchases</p>
+          </div>
+          <div class="col-lg-3">
+            <button class="btn btn-black btn-medium text-uppercase w-100" id="subscribeBtn">Email Me</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Products -->
+  <section id="featured-products" class="product-store py-5 reveal">
+    <div class="container-md">
+      <div class="d-flex align-items-center justify-content-between mb-4">
+        <h2 class="section-title text-uppercase mb-0">Featured Products</h2>
+        <a href="#all-products" class="text-uppercase text-hover fw-bold view-all-btn" data-target="featured">View all</a>
+      </div>
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-4" id="featured-grid">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Collections -->
+  <section id="collection-products" class="py-5 reveal">
+    <div class="container-md">
+      <div class="row g-4">
+        <div class="col-md-6">
+          <div class="collection-card">
+            <img src="https://images.unsplash.com/photo-1549298916-b41d501d3772?w=800&q=80" alt="Minimal">
+            <div class="card-detail p-4 p-lg-5">
+              <h3 class="card-title display-4"><a href="#">Minimal Collection</a></h3>
+              <a href="#featured-products" class="text-uppercase mt-2 d-inline-block text-hover fw-bold light">Shop Now</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="collection-card">
+            <img src="https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?w=800&q=80" alt="Sneakers">
+            <div class="card-detail p-4 p-lg-5">
+              <h3 class="card-title display-4"><a href="#">Sneakers Collection</a></h3>
+              <a href="#latest-products" class="text-uppercase mt-2 d-inline-block text-hover fw-bold light">Shop Now</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Latest Products -->
+  <section id="latest-products" class="product-store py-5 reveal">
+    <div class="container-md">
+      <div class="d-flex align-items-center justify-content-between mb-4">
+        <h2 class="section-title text-uppercase mb-0">Latest Products</h2>
+        <a href="#all-products" class="text-uppercase text-hover fw-bold view-all-btn" data-target="latest">View all</a>
+      </div>
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-4" id="latest-grid">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- All Products (shown when View All is clicked) -->
+  <section id="all-products" class="product-store py-5 d-none reveal">
+    <div class="container-md">
+      <div class="d-flex align-items-center justify-content-between mb-4">
+        <h2 class="section-title text-uppercase mb-0">All Products</h2>
+        <a href="#featured-products" class="text-uppercase text-hover fw-bold" id="hide-all-products">Back</a>
+      </div>
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-4" id="all-products-grid">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer id="footer" class="py-5 mt-4 border-top">
+    <div class="container-lg">
+      <div class="row justify-content-center text-center">
+        <div class="col-md-6">
+          <h5 class="widget-title pb-2">Get In Touch</h5>
+          <div class="footer-contact-text">
+            <span>Natalie's Randoms Sneakers<br>Labogon Mandaue City Cebu - Pinas</span>
+            <span>Call us: (+63) 951 419 4035</span>
+            <span><a href="mailto:contact@stylish.com" class="text-hover fw-bold">contact@stylish.com</a></span>
+          </div>
+        </div>
+      </div>
+      <div class="text-center mt-4 pt-3 border-top">
+        <p class="small text-muted mb-0">&copy; 2026 Natalie's Random Shoes. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  <script>
+    // ========== PRODUCT DATA (prices in PHP) ==========
+    const products = [
+      {
+        id: 1,
+        name: "Air Max Runner",
+        price: 1,
+        image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500&q=80",
+        color: "Red / White",
+        style: "AM-270",
+        category: "Men's Running",
+        desc: "Lightweight cushioning and breathable mesh upper for all-day comfort on the run."
+      },
+      {
+        id: 2,
+        name: "Classic Leather Low",
+        price: 1,
+        image: "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=500&q=80",
+        color: "White / Black",
+        style: "CL-100",
+        category: "Unisex Lifestyle",
+        desc: "Timeless silhouette with premium leather and durable rubber outsole."
+      },
+      {
+        id: 3,
+        name: "Urban Street High",
+        price: 1,
+        image: "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=500&q=80",
+        color: "Black / Gold",
+        style: "USH-420",
+        category: "Men's Lifestyle",
+        desc: "Bold high-top design with premium materials and superior ankle support."
+      },
+      {
+        id: 4,
+        name: "Cloud Walker Pro",
+        price: 1,
+        image: "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?w=500&q=80",
+        color: "Grey / Blue",
+        style: "CWP-88",
+        category: "Women's Running",
+        desc: "Ultra-soft foam midsole delivers cloud-like comfort with every step."
+      },
+      {
+        id: 5,
+        name: "Retro Court 90s",
+        price: 1,
+        image: "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=500&q=80",
+        color: "White / Green",
+        style: "RC-90",
+        category: "Unisex Retro",
+        desc: "Inspired by classic tennis shoes with modern cushioning technology."
+      },
+      {
+        id: 6,
+        name: "Trail Blazer X",
+        price: 1,
+        image: "https://images.unsplash.com/photo-1460353581641-37baddab0fa2?w=500&q=80",
+        color: "Olive / Black",
+        style: "TBX-500",
+        category: "Men's Outdoor",
+        desc: "Rugged outsole and waterproof membrane for serious trail adventures."
+      },
+      {
+        id: 7,
+        name: "Ballet Slip-On",
+        price: 1,
+        image: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500&q=80",
+        color: "Nude / Pink",
+        style: "BS-12",
+        category: "Women's Casual",
+        desc: "Elegant and versatile slip-on perfect for everyday elegance."
+      },
+      {
+        id: 8,
+        name: "Speed Racer",
+        price: 1,
+        image: "https://images.unsplash.com/photo-1608231387044-6355a7d21076?w=500&q=80",
+        color: "Neon / Black",
+        style: "SR-77",
+        category: "Unisex Performance",
+        desc: "Engineered for speed with responsive energy return and lockdown fit."
+      },
+      {
+        id: 9,
+        name: "Heritage Boot",
+        price: 1,
+        image: "https://images.unsplash.com/photo-1520639888713-7851133b1ed0?w=500&q=80",
+        color: "Brown / Tan",
+        style: "HB-200",
+        category: "Men's Boots",
+        desc: "Premium full-grain leather boots built to last a lifetime."
+      },
+      {
+        id: 10,
+        name: "Flex Knit Runner",
+        price: 1,
+        image: "https://images.unsplash.com/photo-1551107696-a4b0c5a0d9a2?w=500&q=80",
+        color: "White / Coral",
+        style: "FKR-33",
+        category: "Women's Running",
+        desc: "Seamless knit upper adapts to your foot for a sock-like fit."
+      }
+    ];
+
+    // Format price in Philippine Peso
+    function formatPrice(amount) {
+      return '₱' + Number(amount).toLocaleString('en-PH', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+    }
+
+    // ========== PAYMONGO CONFIG ==========
+    // Get keys: https://dashboard.paymongo.com → Developers → API Keys
+    // publicKey  = pk_test_... or pk_live_...  (safe in browser)
+    // secretKey  = sk_test_... or sk_live_...  (ONLY for local testing; prefer backendUrl)
+    // backendUrl = http://localhost:3001  (recommended for production)
+    //
+    // When configured, QR Ph is created on PayMongo. Customer scans with GCash/Maya/bank
+    // → money goes to YOUR PayMongo merchant account → status box updates on success.
+    const PAYMONGO = {
+      publicKey: 'pk_live_gRF5P7CneJuPGNhzmndRvLqw',   // your test public key
+      secretKey: 'sk_live_o7Rq2iiSQLVw5w9A3Ctuaz36',   // optional if backendUrl set; for local-only testing
+      backendUrl: '',  // recommended e.g. 'http://localhost:3001'
+      pollMs: 2000
+    };
+
+
+
+    // ========== CART STATE ==========
+    let cart = JSON.parse(localStorage.getItem('stylishCart')) || [];
+    // Always use current catalog prices (fixes old cart totals like ₱10999)
+    cart = cart.map(function(item) {
+      var p = products.find(function(x) { return x.id === item.id; });
+      if (p) item.price = p.price;
+      return item;
+    }).filter(function(item) {
+      return products.some(function(x) { return x.id === item.id; });
+    });
+    try { localStorage.setItem('stylishCart', JSON.stringify(cart)); } catch (e) {}
+    let currentQuickViewId = null;
+
+    // Placeholder for missing / broken product images
+    const PLACEHOLDER_IMG = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='500' height='500' viewBox='0 0 500 500'%3E%3Crect fill='%23f0f0f0' width='500' height='500'/%3E%3Ctext fill='%23999' font-family='sans-serif' font-size='24' x='50%25' y='48%25' text-anchor='middle'%3ENo Image%3C/text%3E%3Ctext fill='%23bbb' font-family='sans-serif' font-size='16' x='50%25' y='56%25' text-anchor='middle'%3EShoe Product%3C/text%3E%3C/svg%3E";
+
+    // ========== RENDER PRODUCTS ==========
+    function renderProductCard(product) {
+      const imgSrc = product.image && product.image.trim() ? product.image : PLACEHOLDER_IMG;
+      return `
+        <div class="col">
+          <div class="product-card position-relative h-100">
+            <div class="card-img">
+              <img src="${imgSrc}" alt="${product.name}" class="product-image img-fluid" loading="lazy"
+                   onerror="this.onerror=null;this.src='${PLACEHOLDER_IMG}'">
+              <div class="cart-concern position-absolute d-flex justify-content-center">
+                <div class="cart-button d-flex gap-2 justify-content-center align-items-center">
+                  <button type="button" class="btn btn-light add-to-cart-btn" data-id="${product.id}" title="Add to Cart">
+                    <svg width="20" height="20"><use xlink:href="#shopping-carriage"></use></svg>
+                  </button>
+                  <button type="button" class="btn btn-light quick-view-btn" data-id="${product.id}" title="Quick View">
+                    <svg width="20" height="20"><use xlink:href="#quick-view"></use></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="card-detail d-flex justify-content-between align-items-center mt-3">
+              <h3 class="card-title fs-6 fw-normal m-0">
+                <a href="#" class="quick-view-link" data-id="${product.id}">${product.name}</a>
+              </h3>
+              <span class="card-price fw-bold">${formatPrice(product.price)}</span>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderProducts() {
+      // Show all 10 products in both Featured and Latest so every item is visible
+      document.getElementById('featured-grid').innerHTML = products.map(renderProductCard).join('');
+      document.getElementById('latest-grid').innerHTML = products.map(renderProductCard).join('');
+      document.getElementById('all-products-grid').innerHTML = products.map(renderProductCard).join('');
+      bindProductEvents();
+    }
+
+    function showAllProducts(e) {
+      if (e) e.preventDefault();
+      const section = document.getElementById('all-products');
+      section.classList.remove('d-none');
+      section.classList.add('visible');
+      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      showToast('Showing all ' + products.length + ' products');
+    }
+
+    function hideAllProducts(e) {
+      if (e) e.preventDefault();
+      document.getElementById('all-products').classList.add('d-none');
+      document.getElementById('featured-products').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // ========== CART FUNCTIONS ==========
+    function saveCart(animateBadge = false) {
+      localStorage.setItem('stylishCart', JSON.stringify(cart));
+      updateCartUI(animateBadge);
+    }
+
+    function addToCart(productId, qty = 1, fromCard = false) {
+      const product = products.find(p => p.id === productId);
+      if (!product) return;
+
+      const existing = cart.find(item => item.id === productId);
+      if (existing) {
+        existing.qty += qty;
+      } else {
+        cart.push({ ...product, qty });
+      }
+      saveCart(true); // animate the badge
+      showToast(`${product.name} added to cart!`);
+
+      // Visual feedback on the product card
+      if (fromCard) {
+        const btn = document.querySelector(`.add-to-cart-btn[data-id="${productId}"]`);
+        if (btn) {
+          const card = btn.closest('.product-card');
+          if (card) {
+            card.classList.add('added');
+            setTimeout(() => card.classList.remove('added'), 1300);
+          }
+        }
+      }
+    }
+
+    function removeFromCart(productId) {
+      cart = cart.filter(item => item.id !== productId);
+      saveCart(false);
+      showToast('Item removed from cart');
+    }
+
+    function updateQty(productId, newQty) {
+      const item = cart.find(i => i.id === productId);
+      if (!item) return;
+      if (newQty < 1) {
+        removeFromCart(productId);
+        return;
+      }
+      item.qty = newQty;
+      saveCart(false);
+    }
+
+    function getCartTotal() {
+      return cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+    }
+
+    function getCartCount() {
+      return cart.reduce((sum, item) => sum + item.qty, 0);
+    }
+
+    function updateCartUI(animateBadge = false) {
+      const count = getCartCount();
+      const badge = document.getElementById('cart-badge');
+      const countEl = document.getElementById('cart-item-count');
+      const container = document.getElementById('cart-items-container');
+      const totalSection = document.getElementById('cart-total-section');
+      const actions = document.getElementById('cart-actions');
+      const subtotalEl = document.getElementById('cart-subtotal');
+
+      // Badge
+      badge.textContent = count > 99 ? '99+' : count;
+      if (count > 0) {
+        badge.classList.add('show');
+        if (animateBadge) {
+          badge.classList.remove('bounce');
+          void badge.offsetWidth; // force reflow
+          badge.classList.add('bounce');
+        }
+      } else {
+        badge.classList.remove('show', 'bounce');
+      }
+      countEl.textContent = count;
+
+      // Cart items
+      if (cart.length === 0) {
+        container.innerHTML = `
+          <div class="empty-cart">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+              <line x1="3" y1="6" x2="21" y2="6"/>
+              <path d="M16 10a4 4 0 01-8 0"/>
+            </svg>
+            <p class="mb-1">Your cart is empty</p>
+            <small>Add some stylish shoes to get started!</small>
+          </div>
+        `;
+        totalSection.classList.add('d-none');
+        actions.classList.add('d-none');
+      } else {
+        container.innerHTML = cart.map(item => `
+          <div class="mini-cart-item d-flex border-bottom pb-3 mb-3 align-items-start">
+            <div class="me-3">
+              <img src="${item.image}" alt="${item.name}" class="img-fluid rounded">
+            </div>
+            <div class="flex-grow-1">
+              <div class="d-flex justify-content-between align-items-start mb-1">
+                <h4 class="product-title fs-6 mb-0">${item.name}</h4>
+                <span class="product-price fs-6 fw-bold text-nowrap ms-2">${formatPrice(item.price * item.qty)}</span>
+              </div>
+              <p class="small text-muted mb-2">${formatPrice(item.price)} each · Qty: <strong class="qty-display" data-id="${item.id}">${item.qty}</strong></p>
+              <div class="d-flex flex-wrap gap-2 cart-item-actions">
+                <button type="button" class="btn btn-sm btn-outline-secondary cart-add-btn" data-id="${item.id}" title="Add one more">
+                  <svg width="14" height="14" class="me-1"><use xlink:href="#plus"></use></svg> Add
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-secondary cart-edit-btn" data-id="${item.id}" title="Edit quantity">
+                  Edit
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-danger cart-delete-btn" data-id="${item.id}" title="Remove item">
+                  Delete
+                </button>
+              </div>
+              <div class="edit-qty-row mt-2 d-none" data-id="${item.id}">
+                <div class="input-group input-group-sm" style="max-width:140px;">
+                  <button type="button" class="btn btn-light qty-minus" data-id="${item.id}">
+                    <svg width="14" height="14"><use xlink:href="#minus"></use></svg>
+                  </button>
+                  <input type="number" class="form-control text-center qty-input" value="${item.qty}" min="1" data-id="${item.id}">
+                  <button type="button" class="btn btn-light qty-plus" data-id="${item.id}">
+                    <svg width="14" height="14"><use xlink:href="#plus"></use></svg>
+                  </button>
+                </div>
+                <button type="button" class="btn btn-sm btn-black ms-2 cart-save-qty" data-id="${item.id}">Save</button>
+              </div>
+            </div>
+          </div>
+        `).join('');
+
+        subtotalEl.textContent = formatPrice(getCartTotal());
+        totalSection.classList.remove('d-none');
+        actions.classList.remove('d-none');
+
+        // Bind cart item events
+        container.querySelectorAll('.cart-delete-btn').forEach(btn => {
+          btn.addEventListener('click', e => {
+            e.preventDefault();
+            removeFromCart(parseInt(btn.dataset.id));
+          });
+        });
+        container.querySelectorAll('.cart-add-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const id = parseInt(btn.dataset.id);
+            const item = cart.find(i => i.id === id);
+            if (item) updateQty(id, item.qty + 1);
+          });
+        });
+        container.querySelectorAll('.cart-edit-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const id = btn.dataset.id;
+            const row = container.querySelector(`.edit-qty-row[data-id="${id}"]`);
+            if (row) row.classList.toggle('d-none');
+          });
+        });
+        container.querySelectorAll('.qty-minus').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const input = container.querySelector(`.qty-input[data-id="${btn.dataset.id}"]`);
+            if (input && parseInt(input.value) > 1) input.value = parseInt(input.value) - 1;
+          });
+        });
+        container.querySelectorAll('.qty-plus').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const input = container.querySelector(`.qty-input[data-id="${btn.dataset.id}"]`);
+            if (input) input.value = parseInt(input.value) + 1;
+          });
+        });
+        container.querySelectorAll('.cart-save-qty').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const id = parseInt(btn.dataset.id);
+            const input = container.querySelector(`.qty-input[data-id="${id}"]`);
+            const newQty = parseInt(input?.value) || 1;
+            updateQty(id, newQty);
+          });
+        });
+      }
+    }
+
+    // ========== QUICK VIEW ==========
+    function openQuickView(productId) {
+      const product = products.find(p => p.id === productId);
+      if (!product) return;
+      currentQuickViewId = productId;
+
+      const qvImg = document.getElementById('qv-image');
+      qvImg.onerror = function() { this.onerror = null; this.src = PLACEHOLDER_IMG; };
+      qvImg.src = (product.image && product.image.trim()) ? product.image : PLACEHOLDER_IMG;
+      document.getElementById('qv-title').textContent = product.name;
+      document.getElementById('qv-price').textContent = formatPrice(product.price);
+      document.getElementById('qv-desc').textContent = product.desc;
+      document.getElementById('qv-color').textContent = product.color;
+      document.getElementById('qv-style').textContent = product.style;
+      document.getElementById('qv-category').textContent = product.category;
+      document.getElementById('qv-qty').value = 1;
+
+      const modal = new bootstrap.Modal(document.getElementById('modaltoggle'));
+      modal.show();
+    }
+
+    // ========== TOAST ==========
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toast-message').textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2500);
+    }
+
+    // ========== EVENT BINDING ==========
+    function bindProductEvents() {
+      document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
+        btn.addEventListener('click', e => {
+          e.preventDefault();
+          e.stopPropagation();
+          addToCart(parseInt(btn.dataset.id), 1, true);
+        });
+      });
+      document.querySelectorAll('.quick-view-btn, .quick-view-link').forEach(btn => {
+        btn.addEventListener('click', e => {
+          e.preventDefault();
+          openQuickView(parseInt(btn.dataset.id));
+        });
+      });
+    }
+
+    // ========== INIT ==========
+    document.addEventListener('DOMContentLoaded', () => {
+      // Hide preloader
+      setTimeout(() => {
+        document.getElementById('preloader').classList.add('hidden');
+      }, 800);
+
+      // Render products & cart
+      renderProducts();
+      updateCartUI();
+
+      // Scroll reveal
+      const revealEls = document.querySelectorAll('.reveal');
+      const revealObs = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            revealObs.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+      revealEls.forEach(el => revealObs.observe(el));
+
+      // Header shadow on scroll
+      const header = document.getElementById('header');
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 40) header.classList.add('scrolled');
+        else header.classList.remove('scrolled');
+      }, { passive: true });
+
+      // Stagger product cards after render
+      setTimeout(() => {
+        document.querySelectorAll('.product-card').forEach((card, i) => {
+          card.style.opacity = '0';
+          card.style.transform = 'translateY(24px)';
+          card.style.transition = `opacity 0.5s ease ${i * 0.06}s, transform 0.5s ease ${i * 0.06}s`;
+          requestAnimationFrame(() => {
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+          });
+        });
+      }, 100);
+
+      // Swiper
+      new Swiper('.main-swiper', {
+        loop: true,
+        autoplay: { delay: 4500, disableOnInteraction: false },
+        pagination: { el: '.swiper-pagination', clickable: true },
+        effect: 'fade',
+        fadeEffect: { crossFade: true },
+        speed: 900
+      });
+
+      // Search
+      document.getElementById('openSearch').addEventListener('click', e => {
+        e.preventDefault();
+        document.getElementById('searchBox').classList.add('active');
+        document.getElementById('searchInput').focus();
+      });
+      document.getElementById('closeSearch').addEventListener('click', () => {
+        document.getElementById('searchBox').classList.remove('active');
+      });
+      document.getElementById('searchBox').addEventListener('click', e => {
+        if (e.target.id === 'searchBox') {
+          document.getElementById('searchBox').classList.remove('active');
+        }
+      });
+
+      // Quick View qty
+      document.getElementById('qv-minus').addEventListener('click', () => {
+        const input = document.getElementById('qv-qty');
+        if (parseInt(input.value) > 1) input.value = parseInt(input.value) - 1;
+      });
+      document.getElementById('qv-plus').addEventListener('click', () => {
+        const input = document.getElementById('qv-qty');
+        input.value = parseInt(input.value) + 1;
+      });
+      document.getElementById('qv-add-to-cart').addEventListener('click', () => {
+        if (currentQuickViewId) {
+          const qty = parseInt(document.getElementById('qv-qty').value) || 1;
+          addToCart(currentQuickViewId, qty);
+          bootstrap.Modal.getInstance(document.getElementById('modaltoggle')).hide();
+        }
+      });
+
+      // Subscribe
+      document.getElementById('subscribeBtn').addEventListener('click', () => {
+        showToast('Thanks for subscribing! Check your email for the code.');
+      });
+
+      // View All – show complete product catalog
+      document.querySelectorAll('.view-all-btn').forEach(btn => {
+        btn.addEventListener('click', showAllProducts);
+      });
+      document.getElementById('hide-all-products').addEventListener('click', hideAllProducts);
+
+      // Checkout → Payment flow
+      document.getElementById('checkout-btn').addEventListener('click', () => {
+        if (cart.length === 0) return;
+        openPaymentModal();
+      });
+
+      document.getElementById('proceed-to-wallet-btn').addEventListener('click', showWalletStep);
+
+      document.getElementById('back-to-details-btn').addEventListener('click', () => {
+        stopPaymentDetection();
+        document.getElementById('payment-step-wallet').classList.add('d-none');
+        document.getElementById('payment-step-qr').classList.add('d-none');
+        document.getElementById('payment-step-details').classList.remove('d-none');
+        document.getElementById('payment-modal-title').textContent = 'Checkout & Pay';
+        clearPayFieldErrors();
+      });
+
+      document.getElementById('back-to-wallet-btn').addEventListener('click', () => {
+        stopPaymentDetection();
+        document.getElementById('payment-step-qr').classList.add('d-none');
+        document.getElementById('payment-step-wallet').classList.remove('d-none');
+        document.getElementById('payment-modal-title').textContent = 'Select Payment Method';
+      });
+
+      // Wallet selection
+      document.querySelectorAll('.wallet-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.wallet-btn').forEach(b => b.classList.remove('selected'));
+          btn.classList.add('selected');
+          const wallet = btn.dataset.wallet;
+          const code = btn.dataset.code;
+          showQRStep(wallet, code);
+        });
+      });
+
+      document.getElementById('success-done-btn').addEventListener('click', () => {
+        const successModal = bootstrap.Modal.getInstance(document.getElementById('modalSuccess'));
+        if (successModal) successModal.hide();
+      });
+
+      // Clean up detection when payment modal is closed
+      document.getElementById('modalPayment').addEventListener('hidden.bs.modal', () => {
+        stopPaymentDetection();
+      });
+
+      // Keyboard: Escape closes search
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') {
+          document.getElementById('searchBox').classList.remove('active');
+        }
+      });
+    });
+
+    // ========== PAYMENT & QR (PayMongo live only – no demo) ==========
+    let currentOrderId = '';
+    let currentOrderTotal = 0;
+    let currentCustomer = { name: '', email: '', mobile: '' };
+    let currentPaymentMethod = '';
+    let paymentPollTimer = null;
+    let paymentDetected = false;
+    let currentPaymentIntentId = null;
+    let currentClientKey = null;
+
+    function generateOrderId() {
+      const num = Math.floor(1000 + Math.random() * 9000);
+      return 'STY-' + num;
+    }
+
+    function clearPayFieldErrors() {
+      ['pay-name', 'pay-email', 'pay-mobile'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.remove('is-invalid');
+      });
+    }
+
+    function validateCustomerDetails() {
+      clearPayFieldErrors();
+      let valid = true;
+      const name = document.getElementById('pay-name').value.trim();
+      const email = document.getElementById('pay-email').value.trim();
+      const mobile = document.getElementById('pay-mobile').value.trim().replace(/\s+/g, '');
+      if (name.length < 2 || !/^[a-zA-ZñÑ\s.'-]+$/.test(name)) {
+        document.getElementById('pay-name').classList.add('is-invalid');
+        valid = false;
+      }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        document.getElementById('pay-email').classList.add('is-invalid');
+        valid = false;
+      }
+      if (!/^09\d{9}$/.test(mobile)) {
+        document.getElementById('pay-mobile').classList.add('is-invalid');
+        valid = false;
+      }
+      if (valid) currentCustomer = { name, email, mobile };
+      return valid;
+    }
+
+    function setPaymentStatus(text, state) {
+      const statusEl = document.getElementById('payment-status');
+      const statusText = document.getElementById('payment-status-text');
+      if (!statusEl || !statusText) return;
+      statusEl.classList.remove('detected', 'error', 'expired');
+      if (state === 'success') statusEl.classList.add('detected');
+      if (state === 'error') statusEl.classList.add('error');
+      if (state === 'expired') statusEl.classList.add('expired');
+      statusText.textContent = text;
+    }
+
+    function stopPaymentDetection() {
+      if (paymentPollTimer) {
+        clearInterval(paymentPollTimer);
+        paymentPollTimer = null;
+      }
+    }
+
+    function paymongoAuth(key) {
+      return 'Basic ' + btoa(key + ':');
+    }
+
+    function isPayMongoReady() {
+      const pk = (PAYMONGO.publicKey || '').trim();
+      const sk = (PAYMONGO.secretKey || '').trim();
+      const be = (PAYMONGO.backendUrl || '').trim();
+      return pk.indexOf('pk_') === 0 && (be.length > 0 || sk.indexOf('sk_') === 0);
+    }
+
+    function openPaymentModal() {
+      if (cart.length === 0) {
+        showToast('Your cart is empty.');
+        return;
+      }
+      if (!isPayMongoReady()) {
+        showToast('PayMongo not configured. Add publicKey + secretKey (or backendUrl).');
+        alert('PayMongo keys required.\n\n' + '1. Open dashboard.paymongo.com - Developers - API Keys\n' + '2. In this file find const PAYMONGO and set publicKey and secretKey\n' + '(or set backendUrl if using the Node backend).');
+        return;
+      }
+      if (currentUser) {
+        currentCustomer = {
+          name: currentUser.name || '',
+          email: currentUser.email || '',
+          mobile: currentUser.mobile || ''
+        };
+      }
+      currentOrderId = generateOrderId();
+      currentOrderTotal = getCartTotal();
+      currentPaymentMethod = '';
+      paymentDetected = false;
+      currentPaymentIntentId = null;
+      currentClientKey = null;
+      stopPaymentDetection();
+
+      document.getElementById('payment-step-details').classList.remove('d-none');
+      document.getElementById('payment-step-wallet').classList.add('d-none');
+      document.getElementById('payment-step-qr').classList.add('d-none');
+      document.getElementById('payment-modal-title').textContent = 'Checkout & Pay';
+      clearPayFieldErrors();
+      document.getElementById('pay-name').value = currentCustomer.name || '';
+      document.getElementById('pay-email').value = currentCustomer.email || '';
+      document.getElementById('pay-mobile').value = currentCustomer.mobile || '';
+      document.getElementById('pay-amount-preview').textContent = formatPrice(currentOrderTotal);
+      document.querySelectorAll('.wallet-btn').forEach(b => b.classList.remove('selected'));
+
+      const cartModal = bootstrap.Modal.getInstance(document.getElementById('modallong'));
+      if (cartModal) cartModal.hide();
+      new bootstrap.Modal(document.getElementById('modalPayment')).show();
+    }
+
+    function showWalletStep() {
+      if (!validateCustomerDetails()) {
+        showToast('Please fix the highlighted fields.');
+        return;
+      }
+      if (!currentUser) {
+        showToast('Please login with a verified Gmail first.');
+        const payModal = bootstrap.Modal.getInstance(document.getElementById('modalPayment'));
+        if (payModal) payModal.hide();
+        setTimeout(() => { location.href = 'login.html'; }, 350);
+        return;
+      }
+      document.getElementById('pay-amount-wallet').textContent = formatPrice(currentOrderTotal);
+      document.getElementById('payment-step-details').classList.add('d-none');
+      document.getElementById('payment-step-qr').classList.add('d-none');
+      document.getElementById('payment-step-wallet').classList.remove('d-none');
+      document.getElementById('payment-modal-title').textContent = 'Select Payment Method';
+    }
+
+    // Create Payment Intent – backend preferred; falls back to secretKey in browser (test only)
+    async function createPaymentIntent() {
+      const amountCentavos = Math.round(Number(currentOrderTotal) * 100);
+      if (amountCentavos < 100) throw new Error('Amount must be at least ₱1.00');
+
+      const payload = {
+        data: {
+          attributes: {
+            amount: amountCentavos,
+            currency: 'PHP',
+            payment_method_allowed: ['qrph'],
+            description: 'Order ' + currentOrderId + " - Natalie's Random Shoes",
+            statement_descriptor: 'NATALIE SHOES',
+            metadata: {
+              order_id: currentOrderId,
+              customer_name: currentCustomer.name,
+              customer_email: currentCustomer.email,
+              customer_mobile: currentCustomer.mobile
+            }
+          }
+        }
+      };
+
+      // Prefer backend (secret key never in browser)
+      if ((PAYMONGO.backendUrl || '').trim()) {
+        const res = await fetch(PAYMONGO.backendUrl.replace(/\/$/, '') + '/create-payment-intent', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            amount: amountCentavos,
+            currency: 'PHP',
+            description: payload.data.attributes.description,
+            metadata: payload.data.attributes.metadata
+          })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error((data.error || data.errors && data.errors[0] && data.errors[0].detail) || 'Backend failed');
+        return {
+          id: data.id || (data.data && data.data.id),
+          client_key: data.client_key || (data.data && data.data.attributes && data.data.attributes.client_key)
+        };
+      }
+
+      // Direct call with secret key (local testing only)
+      const sk = (PAYMONGO.secretKey || '').trim();
+      if (!sk) throw new Error('Set PAYMONGO.secretKey or PAYMONGO.backendUrl');
+      const res = await fetch('https://api.paymongo.com/v1/payment_intents', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': paymongoAuth(sk)
+        },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        const msg = (data.errors && data.errors[0] && data.errors[0].detail) || JSON.stringify(data);
+        throw new Error(msg);
+      }
+      return {
+        id: data.data.id,
+        client_key: data.data.attributes.client_key
+      };
+    }
+
+    async function createQrphPaymentMethod() {
+      const res = await fetch('https://api.paymongo.com/v1/payment_methods', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': paymongoAuth(PAYMONGO.publicKey.trim())
+        },
+        body: JSON.stringify({
+          data: {
+            attributes: {
+              type: 'qrph',
+              billing: {
+                name: currentCustomer.name,
+                email: currentCustomer.email,
+                phone: currentCustomer.mobile
+              }
+            }
+          }
+        })
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        const msg = (data.errors && data.errors[0] && data.errors[0].detail) || JSON.stringify(data);
+        throw new Error(msg);
+      }
+      return data.data.id;
+    }
+
+    async function attachPaymentMethod(intentId, clientKey, paymentMethodId) {
+      const res = await fetch('https://api.paymongo.com/v1/payment_intents/' + intentId + '/attach', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': paymongoAuth(PAYMONGO.publicKey.trim())
+        },
+        body: JSON.stringify({
+          data: {
+            attributes: {
+              payment_method: paymentMethodId,
+              client_key: clientKey,
+              return_url: (function() {
+                var u = window.location.href.split('#')[0];
+                // PayMongo requires http/https — file:// is invalid
+                if (!/^https?:\/\//i.test(u)) return 'https://paymongo.com';
+                return u;
+              })()
+            }
+          }
+        })
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        const msg = (data.errors && data.errors[0] && data.errors[0].detail) || JSON.stringify(data);
+        throw new Error(msg);
+      }
+      return data;
+    }
+
+    function extractQrImage(intent) {
+      try {
+        const na = intent.data.attributes.next_action;
+        if (!na || !na.code) return null;
+        if (na.code.image_url) return na.code.image_url;
+        if (na.code.image_base64) {
+          const b64 = na.code.image_base64;
+          return b64.indexOf('data:') === 0 ? b64 : ('data:image/png;base64,' + b64);
+        }
+      } catch (e) {}
+      return null;
+    }
+
+    async function retrievePaymentIntent(intentId, clientKey) {
+      const url = 'https://api.paymongo.com/v1/payment_intents/' + intentId +
+        '?client_key=' + encodeURIComponent(clientKey);
+      const res = await fetch(url, {
+        headers: { 'Authorization': paymongoAuth(PAYMONGO.publicKey.trim()) }
+      });
+      if (!res.ok) return null;
+      return res.json();
+    }
+
+    function startPayMongoPolling() {
+      stopPaymentDetection();
+      setPaymentStatus('Waiting for payment… Open GCash → Scan QR. Money goes to your PayMongo account.', 'waiting');
+
+      paymentPollTimer = setInterval(async () => {
+        if (paymentDetected || !currentPaymentIntentId || !currentClientKey) return;
+        try {
+          const intent = await retrievePaymentIntent(currentPaymentIntentId, currentClientKey);
+          if (!intent || !intent.data) return;
+          const status = intent.data.attributes.status;
+
+          if (status === 'awaiting_next_action') {
+            setPaymentStatus('Waiting for payment… Scan with GCash, Maya, or any bank app.', 'waiting');
+          } else if (status === 'processing') {
+            setPaymentStatus('Payment received – confirming with PayMongo…', 'processing');
+          } else if (status === 'succeeded') {
+            paymentDetected = true;
+            stopPaymentDetection();
+            onPaymentDetected();
+          } else if (status === 'awaiting_payment_method') {
+            const err = intent.data.attributes.last_payment_error;
+            if (err) {
+              setPaymentStatus('Payment failed: ' + (err.detail || err.code || 'Please try again'), 'error');
+            }
+          }
+        } catch (e) {
+          console.warn('Poll error', e);
+        }
+      }, PAYMONGO.pollMs || 2000);
+    }
+
+    async function showQRStep(walletName, walletCode) {
+      currentPaymentMethod = walletName;
+      paymentDetected = false;
+      stopPaymentDetection();
+
+      document.getElementById('pay-order-id').textContent = '#' + currentOrderId;
+      document.getElementById('pay-amount').textContent = formatPrice(currentOrderTotal);
+      document.getElementById('pay-customer-name').textContent = currentCustomer.name;
+      document.getElementById('pay-method-name').textContent = walletName + ' · PayMongo QR Ph';
+      document.getElementById('qr-instruction').textContent =
+        'Scan with GCash (or Maya / any QR Ph bank app). Payment is sent to your PayMongo account automatically.';
+
+      document.getElementById('payment-step-wallet').classList.add('d-none');
+      document.getElementById('payment-step-details').classList.add('d-none');
+      document.getElementById('payment-step-qr').classList.remove('d-none');
+      document.getElementById('payment-modal-title').textContent = 'Scan to Pay';
+
+      const qrImg = document.getElementById('qr-code-img');
+      const qrLoading = document.getElementById('qr-loading');
+      qrImg.style.display = 'none';
+      qrImg.removeAttribute('src');
+      qrLoading.style.display = 'block';
+      setPaymentStatus('Creating PayMongo QR…', 'waiting');
+
+      if (!isPayMongoReady()) {
+        qrLoading.style.display = 'none';
+        setPaymentStatus('Add your PayMongo publicKey and secretKey (or backendUrl) in PAYMONGO config.', 'error');
+        return;
+      }
+
+      try {
+        const pi = await createPaymentIntent();
+        if (!pi.id || !pi.client_key) throw new Error('No payment intent id/client_key returned');
+
+        currentPaymentIntentId = pi.id;
+        currentClientKey = pi.client_key;
+
+        const pmId = await createQrphPaymentMethod();
+        const attached = await attachPaymentMethod(pi.id, pi.client_key, pmId);
+        const qrSrc = extractQrImage(attached);
+
+        if (!qrSrc) {
+          qrLoading.style.display = 'none';
+          setPaymentStatus('PayMongo did not return a QR image. Check account QR Ph activation.', 'error');
+          console.log('Attach response', attached);
+          return;
+        }
+
+        qrImg.onload = () => {
+          qrLoading.style.display = 'none';
+          qrImg.style.display = 'block';
+          startPayMongoPolling();
+        };
+        qrImg.onerror = () => {
+          qrLoading.style.display = 'none';
+          setPaymentStatus('Could not display QR image.', 'error');
+        };
+        qrImg.src = qrSrc;
+      } catch (err) {
+        console.error(err);
+        qrLoading.style.display = 'none';
+        setPaymentStatus('PayMongo error: ' + err.message, 'error');
+        showToast('Payment setup failed');
+      }
+    }
+
+    function onPaymentDetected() {
+      setPaymentStatus('Payment received in your PayMongo account! Finalizing…', 'success');
+      showToast('PayMongo payment confirmed!');
+
+      try {
+        const orders = JSON.parse(localStorage.getItem('stylishOrders') || '[]');
+        orders.push({
+          id: currentOrderId,
+          total: currentOrderTotal,
+          method: currentPaymentMethod,
+          paymongo: true,
+          payment_intent_id: currentPaymentIntentId,
+          customer: Object.assign({}, currentCustomer),
+          items: cart.map(function (i) { return { id: i.id, name: i.name, qty: i.qty, price: i.price }; }),
+          date: new Date().toISOString()
+        });
+        localStorage.setItem('stylishOrders', JSON.stringify(orders));
+      } catch (e) {}
+
+      cart = [];
+      saveCart(false);
+
+      setTimeout(() => {
+        const payModal = bootstrap.Modal.getInstance(document.getElementById('modalPayment'));
+        if (payModal) payModal.hide();
+        document.getElementById('success-order-id').textContent = '#' + currentOrderId;
+        document.getElementById('success-amount').textContent = formatPrice(currentOrderTotal);
+        document.getElementById('success-method').textContent = currentPaymentMethod + ' · PayMongo QR Ph';
+        new bootstrap.Modal(document.getElementById('modalSuccess')).show();
+      }, 900);
+    }
+
+    function handleSearch(e) {
+      e.preventDefault();
+      const q = document.getElementById('searchInput').value.trim().toLowerCase();
+      if (!q) return;
+      document.getElementById('searchBox').classList.remove('active');
+      const match = products.find(p => p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q));
+      if (match) {
+        openQuickView(match.id);
+      } else {
+        showToast('No products found for "' + q + '"');
+      }
+      return false;
+    }
+
+    // ========== AUTH (localStorage) ==========
+    let currentUser = JSON.parse(localStorage.getItem('stylishUser')) || null;
+
+    function getUsers() {
+      return JSON.parse(localStorage.getItem('stylishUsers')) || [];
+    }
+
+    function saveUsers(users) {
+      localStorage.setItem('stylishUsers', JSON.stringify(users));
+    }
+
+    function setCurrentUser(user) {
+      currentUser = user;
+      if (user) {
+        localStorage.setItem('stylishUser', JSON.stringify(user));
+      } else {
+        localStorage.removeItem('stylishUser');
+      }
+      updateAuthUI();
+    }
+
+    function updateAuthUI() {
+      const topLogin = document.querySelector('.auth-login-link');
+      const topSignup = document.querySelector('.auth-signup-link');
+      const userIcon = document.querySelector('.auth-user-icon');
+      const footerLogin = document.querySelector('.auth-footer-login');
+
+      if (currentUser && currentUser.verified) {
+        if (topLogin) {
+          topLogin.textContent = (currentUser.name || 'User').split(' ')[0] + ' (Logout)';
+          topLogin.href = '#';
+          topLogin.title = 'Click to logout';
+          topLogin.onclick = (e) => { e.preventDefault(); logout(); };
+        }
+        if (topSignup) topSignup.style.display = 'none';
+        if (userIcon) {
+          userIcon.href = 'dashboard.html';
+          userIcon.title = 'Dashboard – ' + currentUser.name;
+          userIcon.onclick = null;
+        }
+        if (footerLogin) {
+          footerLogin.textContent = 'Logout';
+          footerLogin.onclick = (e) => { e.preventDefault(); logout(); };
+        }
+      } else {
+        if (currentUser && !currentUser.verified) {
+          // Incomplete verification
+          setCurrentUser(null);
+        }
+        if (topLogin) {
+          topLogin.textContent = 'Login';
+          topLogin.href = 'login.html';
+          topLogin.title = '';
+          topLogin.onclick = null;
+        }
+        if (topSignup) {
+          topSignup.style.display = '';
+          topSignup.href = 'signup.html';
+        }
+        if (userIcon) {
+          userIcon.href = 'login.html';
+          userIcon.title = 'Login';
+          userIcon.onclick = null;
+        }
+        if (footerLogin) {
+          footerLogin.textContent = 'Login';
+          footerLogin.onclick = null;
+        }
+      }
+    }
+
+    function logout() {
+      setCurrentUser(null);
+      showToast('Logged out successfully.');
+    }
+
+    function handleLogin(e) {
+      e.preventDefault();
+      const emailEl = document.getElementById('login-email');
+      const passEl = document.getElementById('login-password');
+      const email = emailEl.value.trim().toLowerCase();
+      const password = passEl.value;
+
+      emailEl.classList.remove('is-invalid');
+      passEl.classList.remove('is-invalid');
+
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        emailEl.classList.add('is-invalid');
+        return false;
+      }
+      if (!password) {
+        passEl.classList.add('is-invalid');
+        return false;
+      }
+
+      const users = getUsers();
+      const user = users.find(u => u.email === email);
+
+      if (!user) {
+        // No account → prompt to create one
+        bootstrap.Modal.getInstance(document.getElementById('modallogin')).hide();
+        showToast('No account found. Please create one.');
+        setTimeout(() => {
+          const signupModal = new bootstrap.Modal(document.getElementById('modalsignup'));
+          document.getElementById('signup-email').value = email;
+          signupModal.show();
+        }, 400);
+        return false;
+      }
+
+      if (user.password !== password) {
+        passEl.classList.add('is-invalid');
+        showToast('Incorrect password.');
+        return false;
+      }
+
+      setCurrentUser({ name: user.name, email: user.email, mobile: user.mobile });
+      bootstrap.Modal.getInstance(document.getElementById('modallogin')).hide();
+      showToast('Welcome back, ' + user.name.split(' ')[0] + '!');
+      return false;
+    }
+
+    function handleSignup(e) {
+      e.preventDefault();
+      const nameEl = document.getElementById('signup-name');
+      const emailEl = document.getElementById('signup-email');
+      const mobileEl = document.getElementById('signup-mobile');
+      const passEl = document.getElementById('signup-password');
+      const confirmEl = document.getElementById('signup-confirm');
+      const termsEl = document.getElementById('signup-terms');
+
+      [nameEl, emailEl, mobileEl, passEl, confirmEl, termsEl].forEach(el => el.classList.remove('is-invalid'));
+
+      const name = nameEl.value.trim();
+      const email = emailEl.value.trim().toLowerCase();
+      const mobile = mobileEl.value.trim().replace(/\s+/g, '');
+      const password = passEl.value;
+      const confirm = confirmEl.value;
+
+      let valid = true;
+
+      if (name.length < 2 || !/^[a-zA-ZñÑ\s.'-]+$/.test(name)) {
+        nameEl.classList.add('is-invalid');
+        valid = false;
+      }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        emailEl.classList.add('is-invalid');
+        valid = false;
+      }
+      if (!/^09\d{9}$/.test(mobile)) {
+        mobileEl.classList.add('is-invalid');
+        valid = false;
+      }
+      if (password.length < 6) {
+        passEl.classList.add('is-invalid');
+        valid = false;
+      }
+      if (password !== confirm) {
+        confirmEl.classList.add('is-invalid');
+        valid = false;
+      }
+      if (!termsEl.checked) {
+        termsEl.classList.add('is-invalid');
+        valid = false;
+      }
+
+      if (!valid) {
+        showToast('Please fix the highlighted fields.');
+        return false;
+      }
+
+      const users = getUsers();
+      if (users.some(u => u.email === email)) {
+        emailEl.classList.add('is-invalid');
+        showToast('An account with this email already exists. Please login.');
+        return false;
+      }
+
+      const newUser = { name, email, mobile, password };
+      users.push(newUser);
+      saveUsers(users);
+      setCurrentUser({ name, email, mobile });
+
+      bootstrap.Modal.getInstance(document.getElementById('modalsignup')).hide();
+      showToast('Account created! Welcome, ' + name.split(' ')[0] + '!');
+      return false;
+    }
+
+    // Call on load
+    updateAuthUI();
+  </script>
+</body>
+
+</html>

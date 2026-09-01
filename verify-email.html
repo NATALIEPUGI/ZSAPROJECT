@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Verify Gmail – Natalie's Random Shoes</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+  <style>
+    :root { --accent: #e63946; }
+    body {
+      font-family: Inter, sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(160deg, #0a0a0a 0%, #1a1a1a 40%, #2a1010 100%);
+      display: flex; align-items: center; justify-content: center;
+      padding: 24px;
+    }
+    .auth-card {
+      background: #fff; border-radius: 20px; padding: 2.5rem;
+      width: 100%; max-width: 440px;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.35);
+    }
+    .brand { font-family: 'Playfair Display', serif; font-weight: 900; font-size: 1.35rem; }
+    .btn-red {
+      background: var(--accent); border: none; color: #fff; font-weight: 600;
+      padding: 12px; border-radius: 10px; text-transform: uppercase;
+    }
+    .btn-red:hover { background: #c1121f; color: #fff; }
+    .form-control { border-radius: 10px; padding: 12px 14px; letter-spacing: 4px; text-align: center; font-size: 1.25rem; font-weight: 700; }
+    .code-box {
+      background: #f8f9fa; border-radius: 12px; padding: 14px; text-align: center;
+      font-family: monospace; font-size: 1.5rem; font-weight: 700; letter-spacing: 6px;
+      border: 2px dashed #ccc; margin: 12px 0;
+    }
+    a { color: var(--accent); font-weight: 600; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <div class="auth-card">
+    <div class="text-center mb-3">
+      <div class="brand mb-1">Verify your Gmail</div>
+      <p class="text-muted small mb-0">Enter the 6-digit code for <strong id="email-display">your Gmail</strong></p>
+    </div>
+
+    <div class="alert alert-warning small" id="demo-note">
+      <strong>How this works:</strong> On a live server, this code is emailed to your Gmail.
+      For this static site, your verification code is shown below — open Gmail on your phone to confirm this is your address, then enter the code here.
+    </div>
+
+    <div class="code-box" id="code-hint">------</div>
+    <p class="text-center small text-muted">This is your verification code (keep it private)</p>
+
+    <form id="verify-form" class="mt-3">
+      <div class="mb-3">
+        <label class="form-label fw-semibold">Enter code</label>
+        <input type="text" id="verify-code" class="form-control" maxlength="6" inputmode="numeric" pattern="[0-9]{6}" placeholder="000000" required>
+        <div class="invalid-feedback">Enter the 6-digit code.</div>
+      </div>
+      <div class="d-grid gap-2">
+        <button type="submit" class="btn btn-red">Verify Gmail</button>
+        <a href="login.html" class="btn btn-outline-secondary">Back to Login</a>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    function getUsers() {
+      return JSON.parse(localStorage.getItem('stylishUsers') || '[]');
+    }
+    function saveUsers(users) {
+      localStorage.setItem('stylishUsers', JSON.stringify(users));
+    }
+
+    const email = localStorage.getItem('stylishPendingEmail') || '';
+    const hint = localStorage.getItem('stylishVerifyHint') || '';
+
+    if (!email) {
+      location.href = 'signup.html';
+    }
+
+    document.getElementById('email-display').textContent = email;
+    if (hint) document.getElementById('code-hint').textContent = hint;
+
+    document.getElementById('verify-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const input = document.getElementById('verify-code');
+      const code = input.value.trim();
+      input.classList.remove('is-invalid');
+
+      if (!/^\d{6}$/.test(code)) {
+        input.classList.add('is-invalid');
+        return;
+      }
+
+      const users = getUsers();
+      const idx = users.findIndex(u => u.email === email.toLowerCase());
+      if (idx < 0) {
+        alert('Account not found. Please sign up again.');
+        location.href = 'signup.html';
+        return;
+      }
+
+      if (String(users[idx].verifyCode) !== code) {
+        input.classList.add('is-invalid');
+        alert('Invalid code. Please try again.');
+        return;
+      }
+
+      users[idx].verified = true;
+      delete users[idx].verifyCode;
+      saveUsers(users);
+      localStorage.removeItem('stylishVerifyHint');
+      localStorage.removeItem('stylishPendingEmail');
+
+      // Verified → proceed to login, then dashboard
+      location.href = 'login.html?verified=1';
+    });
+  </script>
+</body>
+</html>
